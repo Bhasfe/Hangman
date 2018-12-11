@@ -2,10 +2,12 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+import getwords
+import random
 
 button_Font = QFont("Century Gothic",20)
 word_Font = QFont("Times",25)
-text_Font = QFont("Times",12)
+text_Font = QFont("Times",10)
 
 class main(QMainWindow):
 
@@ -19,12 +21,18 @@ class main(QMainWindow):
 
         self.title = "Hangman Game V1"
 
+        self.setAutoFillBackground(True)
+        self.colorpalette = self.palette()
+
+
+       # getwords.gettingwords()
+
+        self.mistakes = 0
+        self.words_sofar = []
+
         self.interface()
+        self.askWord()
         self.show()
-
-
-
-
 
     def interface(self):
         self.setGeometry(self.left,self.top,self.width,self.height)
@@ -59,12 +67,15 @@ class main(QMainWindow):
         help.addAction(helpme)
 
         exit.triggered.connect(self.quit)
-
+        newGame.triggered.connect(self.newGame)
+        about.triggered.connect(self.aboutMe)
+        helpme.triggered.connect(self.howtoplay)
+        change_bg.triggered.connect(self.Change_bg)
 
         # Hangman
 
-        self.vertical_layout = QVBoxLayout()
-        self.horizontal_layout = QHBoxLayout()
+        #self.vertical_layout = QVBoxLayout()
+        #self.horizontal_layout = QHBoxLayout()
 
         self.gallow = QLabel(self)
         self.gallow.setPixmap(QPixmap("mistake0.jpg"))
@@ -74,8 +85,9 @@ class main(QMainWindow):
 
 
         self.meaning = QLabel("Meaning Of the word: ",self)
-        self.meaning.move(30,70)
-        self.meaning.resize(300,20)
+        self.meaning.move(30,10)
+        self.meaning.resize(400,200)
+        self.meaning.setWordWrap(True)
         self.meaning.setFont(text_Font)
 
         self.word = QLabel("The word",self)
@@ -84,16 +96,21 @@ class main(QMainWindow):
         self.word.setFont(word_Font)
 
         self.guess = QLineEdit(self)
-        self.guess.setPlaceholderText("Place enter your guess")
-        self.guess.resize(160,30)
-        self.guess.move(30,190)
+        self.guess.setPlaceholderText("Your guess")
+        self.guess.resize(100,30)
+        self.guess.move(30,235)
 
         self.answer_button = QPushButton("Try",self)
-        self.answer_button.move(30,225)
+        self.answer_button.move(30,270)
         self.answer_button.resize(100,50)
         self.answer_button.setFont(button_Font)
 
+        self.answer_button.clicked.connect(self.answer)
 
+        self.sofar = QLabel("So far: ",self)
+        self.sofar.move(470,280)
+        self.sofar.resize(160,30)
+        self.sofar.setFont(text_Font)
 
 
     def quit(self):
@@ -101,7 +118,129 @@ class main(QMainWindow):
         if sure == QMessageBox.Yes:
             qApp.quit()
 
+    def askWord(self):
 
+        getwords.cursor.execute("SELECT COUNT(id) FROM words")
+        word_number = getwords.cursor.fetchall()
+        getwords.con.commit()
+        word_id = random.randint(1,word_number[0][0]+1)
+        getwords.cursor.execute("SELECT * FROM words WHERE id=?",(word_id,))
+        the_word_data = getwords.cursor.fetchall()
+        getwords.con.commit()
+
+        self.the_word = the_word_data[0][1]
+        self.the_meaning = the_word_data[0][2]
+
+        print(self.the_word)
+        print(self.the_meaning)
+
+        self.meaning.setText("Definition: " + self.the_meaning)
+
+        self.question =""
+        for i in self.the_word:
+            self.question = self.question + " _"
+
+        self.word.setText(self.question)
+
+    def answer(self):
+
+        if self.guess.text() not in self.words_sofar:
+
+            if self.guess.text() in self.the_word:
+                self.newquestion = ""
+                self.question = list(self.question)
+                l_guess = self.guess.text()
+                for i in range(0,len(self.the_word)):
+                    if self.the_word[i] == l_guess:
+                        self.question[i*2+1] = l_guess
+                        print(self.question)
+                        print(self.newquestion)
+                for j in self.question:
+                    self.newquestion +=j
+                self.word.setText(self.newquestion)
+                self.guess.clear()
+
+                if "_" not in self.newquestion:
+                    again = QMessageBox.question(self,"Congratulations","You Won ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
+                    if again == QMessageBox.Yes:
+                        self.askWord()
+
+            else:
+                self.words_sofar.append(self.guess.text())
+                self.sofar.setText(self.sofar.text() + self.guess.text() + ", ")
+                self.mistakes += 1
+                if self.mistakes ==1:
+                    self.gallow.setPixmap(QPixmap("mistake1.jpg"))
+                elif self.mistakes ==2:
+                    self.gallow.setPixmap(QPixmap("mistake2.jpg"))
+                elif self.mistakes ==3:
+                    self.gallow.setPixmap(QPixmap("mistake3.jpg"))
+                elif self.mistakes ==4:
+                    self.gallow.setPixmap(QPixmap("mistake4.jpg"))
+                elif self.mistakes ==5:
+                    self.gallow.setPixmap(QPixmap("mistake5.jpg"))
+                elif self.mistakes ==6:
+                    self.gallow.setPixmap(QPixmap("mistake6.jpg"))
+
+                self.guess.clear()
+
+                if self.mistakes == 6:
+                    again = QMessageBox.question(self,"Game Over","Game Over ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
+                    if again == QMessageBox.Yes:
+                        self.askWord()
+
+        else:
+            QMessageBox.question(self,"Repetation","You have already tried this letter",QMessageBox.Ok)
+
+    def newGame(self):
+        self.askWord()
+
+    def aboutMe(self):
+        self.whoami = AboutMe()
+        self.whoami.show()
+
+    def howtoplay(self):
+        self.help = Help()
+        self.help.show()
+
+    def Change_bg(self):
+        color = QColorDialog.getColor()
+        self.colorpalette.setColor(self.backgroundRole(),color)
+        self.setPalette(self.colorpalette)
+
+
+
+class AboutMe(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        horizontal_layout = QHBoxLayout()
+        self.description = QLabel("I am a computer engineering student who has written this program to improve himself in python")
+        self.description.setWordWrap(True)
+        self.description.setFont(text_Font)
+
+        horizontal_layout.addStretch()
+        horizontal_layout.addWidget(self.description)
+        horizontal_layout.addStretch()
+        self.setLayout(horizontal_layout)
+        self.setGeometry(600,400,400,100)
+        self.setWindowTitle("About Me")
+
+class Help(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        horizontal_layout = QHBoxLayout()
+        self.howtoplay = QLabel("To find the word, use the definition and enter your guess (as a letter) into textbox")
+        self.howtoplay.setWordWrap(True)
+        self.howtoplay.setFont(text_Font)
+
+        horizontal_layout.addStretch()
+        horizontal_layout.addWidget(self.howtoplay)
+        horizontal_layout.addStretch()
+        self.setLayout(horizontal_layout)
+        self.setGeometry(600,400,400,100)
+        self.setWindowTitle("Help")
 
 application = QApplication(sys.argv)
 main_window = main()
