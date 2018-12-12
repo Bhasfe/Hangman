@@ -12,7 +12,7 @@ You can see your preceding guesses at the ‘so far’ list. If you guess one of
 ![newgame](https://github.com/Bhasfe/Hangman/blob/master/images/new.png)
  
 ### Some Details
-The projects contains two python file which are **main.py** and **getwords.py**<br>
+The project contains two python file which are **main.py** and **getwords.py**<br>
 <br>
 In *getwords.py*, I used Oxford Dictionaries API to get words. You can find further information at [https://developer.oxforddictionaries.com](https://developer.oxforddictionaries.com).
 I also created a text file which contains the top 1000 words in English.
