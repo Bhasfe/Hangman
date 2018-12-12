@@ -49,10 +49,5 @@ def gettingwords():
         else:
             meaning_list = "Not Found"
 
-        #" , ".join(meaning_list)
-        #addtodb(the_word,meaning_list[0])
-
-        #print(the_word)
-        #print(len(meaning_list[0]))
 
         addtodb(the_word,meaning_list[0])

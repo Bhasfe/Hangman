@@ -24,7 +24,7 @@ class main(QMainWindow):
         self.colorpalette = self.palette()
 
 
-       # getwords.gettingwords()
+        getwords.gettingwords()
 
         self.mistakes = 0
         self.words_sofar = []
@@ -70,9 +70,6 @@ class main(QMainWindow):
         change_bg.triggered.connect(self.Change_bg)
 
         # Hangman
-
-        #self.vertical_layout = QVBoxLayout()
-        #self.horizontal_layout = QHBoxLayout()
 
         self.gallow = QLabel(self)
         self.gallow.setPixmap(QPixmap("mistake0.jpg"))
