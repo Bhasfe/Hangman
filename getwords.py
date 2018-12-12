@@ -7,16 +7,17 @@ cursor = con.cursor()
 
 def addtodb(word,meaning):
 
-    cursor.execute("SELECT * FROM words")
-    word_database = cursor.fetchall()
-    con.commit()
-    if word not in word_database:
-        cursor.execute("INSERT INTO words(word,definition) VALUES (?,?)",(word,meaning))
+    if meaning != "Error":
+        cursor.execute("SELECT * FROM words")
+        word_database = cursor.fetchall()
         con.commit()
+        if word not in word_database:
+            cursor.execute("INSERT INTO words(word,definition) VALUES (?,?)",(word,meaning))
+            con.commit()
 
 def gettingwords():
 
-    for i in range(5):
+    for i in range(20):
 
         with open("top1000words.txt","r") as word_list:
 

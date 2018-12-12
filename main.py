@@ -1,7 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import *
 import getwords
 import random
 
@@ -55,10 +54,8 @@ class main(QMainWindow):
         game.addAction(exit)
 
         change_bg = QAction("Background",self)
-        change_font = QAction("Font",self)
 
         view.addAction(change_bg)
-        view.addAction(change_font)
 
         about = QAction("About Me",self)
         helpme = QAction("Help",self)
@@ -91,7 +88,7 @@ class main(QMainWindow):
         self.meaning.setFont(text_Font)
 
         self.word = QLabel("The word",self)
-        self.word.move(30,130)
+        self.word.move(30,150)
         self.word.resize(300,50)
         self.word.setFont(word_Font)
 
@@ -128,8 +125,11 @@ class main(QMainWindow):
         the_word_data = getwords.cursor.fetchall()
         getwords.con.commit()
 
-        self.the_word = the_word_data[0][1]
-        self.the_meaning = the_word_data[0][2]
+        try:
+            self.the_word = the_word_data[0][1]
+            self.the_meaning = the_word_data[0][2]
+        except IndexError:
+            self.askWord()
 
         print(self.the_word)
         print(self.the_meaning)
@@ -144,53 +144,59 @@ class main(QMainWindow):
 
     def answer(self):
 
-        if self.guess.text() not in self.words_sofar:
+        wrong_input = "0123456789-_*=()[]/{}?'\+^#!."
+        if len(self.guess.text())==1 and self.guess.text() not in wrong_input:
+            l_guess = self.guess.text()
+            l_guess = l_guess.lower()
+            if l_guess not in self.words_sofar:
+                if l_guess in self.the_word:
+                    self.newquestion = ""
+                    self.question = list(self.question)
 
-            if self.guess.text() in self.the_word:
-                self.newquestion = ""
-                self.question = list(self.question)
-                l_guess = self.guess.text()
-                for i in range(0,len(self.the_word)):
-                    if self.the_word[i] == l_guess:
-                        self.question[i*2+1] = l_guess
-                        print(self.question)
-                        print(self.newquestion)
-                for j in self.question:
-                    self.newquestion +=j
-                self.word.setText(self.newquestion)
-                self.guess.clear()
+                    for i in range(0,len(self.the_word)):
+                        if self.the_word[i] == l_guess:
+                            self.question[i*2+1] = l_guess
+                            print(self.question)
+                            print(self.newquestion)
+                    for j in self.question:
+                        self.newquestion +=j
+                    self.word.setText(self.newquestion)
+                    self.guess.clear()
 
-                if "_" not in self.newquestion:
-                    again = QMessageBox.question(self,"Congratulations","You Won ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
-                    if again == QMessageBox.Yes:
-                        self.askWord()
+                    if "_" not in self.newquestion:
+                        again = QMessageBox.question(self,"Congratulations","You Won ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
+                        if again == QMessageBox.Yes:
+                            self.askWord()
+
+                else:
+                    self.words_sofar.append(self.guess.text())
+                    self.sofar.setText(self.sofar.text() + self.guess.text() + ", ")
+                    self.mistakes += 1
+                    if self.mistakes ==1:
+                        self.gallow.setPixmap(QPixmap("mistake1.jpg"))
+                    elif self.mistakes ==2:
+                        self.gallow.setPixmap(QPixmap("mistake2.jpg"))
+                    elif self.mistakes ==3:
+                        self.gallow.setPixmap(QPixmap("mistake3.jpg"))
+                    elif self.mistakes ==4:
+                        self.gallow.setPixmap(QPixmap("mistake4.jpg"))
+                    elif self.mistakes ==5:
+                        self.gallow.setPixmap(QPixmap("mistake5.jpg"))
+                    elif self.mistakes ==6:
+                        self.gallow.setPixmap(QPixmap("mistake6.jpg"))
+
+                    self.guess.clear()
+
+                    if self.mistakes == 6:
+                        again = QMessageBox.question(self,"Game Over","Game Over ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
+                        if again == QMessageBox.Yes:
+                            self.askWord()
 
             else:
-                self.words_sofar.append(self.guess.text())
-                self.sofar.setText(self.sofar.text() + self.guess.text() + ", ")
-                self.mistakes += 1
-                if self.mistakes ==1:
-                    self.gallow.setPixmap(QPixmap("mistake1.jpg"))
-                elif self.mistakes ==2:
-                    self.gallow.setPixmap(QPixmap("mistake2.jpg"))
-                elif self.mistakes ==3:
-                    self.gallow.setPixmap(QPixmap("mistake3.jpg"))
-                elif self.mistakes ==4:
-                    self.gallow.setPixmap(QPixmap("mistake4.jpg"))
-                elif self.mistakes ==5:
-                    self.gallow.setPixmap(QPixmap("mistake5.jpg"))
-                elif self.mistakes ==6:
-                    self.gallow.setPixmap(QPixmap("mistake6.jpg"))
-
-                self.guess.clear()
-
-                if self.mistakes == 6:
-                    again = QMessageBox.question(self,"Game Over","Game Over ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
-                    if again == QMessageBox.Yes:
-                        self.askWord()
+                QMessageBox.question(self,"Repetation","You have already tried this letter",QMessageBox.Ok)
 
         else:
-            QMessageBox.question(self,"Repetation","You have already tried this letter",QMessageBox.Ok)
+            QMessageBox.question(self,"Wrong Input","Your input is not in the correct form",QMessageBox.Ok)
 
     def newGame(self):
         self.askWord()
