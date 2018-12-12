@@ -24,4 +24,4 @@ app_key = "your_app_key"`
 
 In *main.py*, the askWord function selects a random word in word_database and asks it to user.
 
-I am looking forward your recommendations and comments :)
+I am looking forward your suggestions and comments :)
