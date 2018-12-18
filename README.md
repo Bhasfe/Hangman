@@ -1,15 +1,15 @@
-## A Hangman Game implementation in Python
-**Game Play**
+## A Hangman Game implementation in Python<br>
+**Game Play**<br>
 ![start](https://github.com/Bhasfe/Hangman/blob/master/images/gameplay.gif?raw=true)
-
+<br>
 Hangman is the one of the most popular puzzles which has been created long time ago. The aim of the game is finding the world which is asked. To help you to find the word, its definition will be given for you. You will try a letter, and if the word contains it, the letter will be visible in the corresponding place.
 
 You can see your preceding guesses at the ‘so far’ list. If you guess one of your preceding guesses, the program will inform you about that as well.
 
 ### Requirements
-To use *Pyqt5* and *requests* you need to install
+To use *Pyqt5* and *requests* you need to install<br>
 `pip3 install pyqt5`<br>
-`pip install requests`
+`pip install requests`<br>
  
 ### Some Details
 The project contains two python file which are **main.py** and **getwords.py**<br>
