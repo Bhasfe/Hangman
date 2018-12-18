@@ -24,13 +24,11 @@ class main(QMainWindow):
         self.colorpalette = self.palette()
 
 
-        getwords.gettingwords()
-
         self.mistakes = 0
-        self.words_sofar = []
 
         self.interface()
         self.askWord()
+        getwords.gettingwords()
         self.show()
 
     def interface(self):
@@ -113,6 +111,10 @@ class main(QMainWindow):
             qApp.quit()
 
     def askWord(self):
+
+        self.sofar.setText("So Far: ")
+        self.mistakes = 0
+        self.words_sofar = []
 
         getwords.cursor.execute("SELECT COUNT(id) FROM words")
         word_number = getwords.cursor.fetchall()

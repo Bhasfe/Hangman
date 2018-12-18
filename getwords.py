@@ -17,7 +17,7 @@ def addtodb(word,meaning):
 
 def gettingwords():
 
-    for i in range(20):
+    for i in range(5):
 
         with open("top1000words.txt","r") as word_list:
 
@@ -25,8 +25,8 @@ def gettingwords():
             the_word = random.sample(words,1)
             the_word = the_word[0].replace("\n","")
 
-        app_id = "your_app_id"
-        app_key = "your_app_key"
+        app_id = "698028c0"
+        app_key = "800bcc3a296d14a1731da7b6b12b2641"
         language = 'en'
         get_word = the_word
 
