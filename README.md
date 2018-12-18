@@ -16,7 +16,7 @@ The project contains two python file which are **main.py** and **getwords.py**<b
 <br>
 In *getwords.py*, I used Oxford Dictionaries API to get words. You can find further information at [https://developer.oxforddictionaries.com](https://developer.oxforddictionaries.com).
 I also created a text file which contains the top 1000 words in English.
-The program searches the definitions of the 20 words that are in the **top1000words.txt** at **Oxford Dictionaries** and insert words and their definitions into word_database.db for each execution
+The program searches the definitions of the 5 words that are in the **top1000words.txt** at **Oxford Dictionaries** and insert words and their definitions into word_database.db for each execution
 To be able to use **getwords.py**, you can change these parts with your own
 <br>*line 28 29*<br>
 `app_id = "your_app_id"`<br>
