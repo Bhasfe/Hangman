@@ -70,7 +70,7 @@ class main(QMainWindow):
         # Hangman
 
         self.gallow = QLabel(self)
-        self.gallow.setPixmap(QPixmap("mistake0.jpg"))
+        self.gallow.setPixmap(QPixmap("./images/mistake0.jpg"))
         self.gallow.resize(200,200)
 
         self.gallow.move(470,75)
@@ -166,23 +166,22 @@ class main(QMainWindow):
                         again = QMessageBox.question(self,"Congratulations","You Won ! Would you like to play again ?",QMessageBox.Yes | QMessageBox.No)
                         if again == QMessageBox.Yes:
                             self.askWord()
-
                 else:
                     self.words_sofar.append(self.guess.text())
                     self.sofar.setText(self.sofar.text() + self.guess.text() + ", ")
                     self.mistakes += 1
                     if self.mistakes ==1:
-                        self.gallow.setPixmap(QPixmap("mistake1.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake1.jpg"))
                     elif self.mistakes ==2:
-                        self.gallow.setPixmap(QPixmap("mistake2.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake2.jpg"))
                     elif self.mistakes ==3:
-                        self.gallow.setPixmap(QPixmap("mistake3.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake3.jpg"))
                     elif self.mistakes ==4:
-                        self.gallow.setPixmap(QPixmap("mistake4.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake4.jpg"))
                     elif self.mistakes ==5:
-                        self.gallow.setPixmap(QPixmap("mistake5.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake5.jpg"))
                     elif self.mistakes ==6:
-                        self.gallow.setPixmap(QPixmap("mistake6.jpg"))
+                        self.gallow.setPixmap(QPixmap("./images/mistake6.jpg"))
 
                     self.guess.clear()
 
