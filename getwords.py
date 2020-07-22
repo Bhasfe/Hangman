@@ -25,8 +25,8 @@ def gettingwords():
             the_word = random.sample(words,1)
             the_word = the_word[0].replace("\n","")
 
-        app_id = "698028c0"
-        app_key = "800bcc3a296d14a1731da7b6b12b2641"
+        app_id = "your_app_id"
+        app_key = "your_app_key"
         language = 'en'
         get_word = the_word
 
